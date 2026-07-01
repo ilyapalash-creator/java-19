@@ -1,10 +1,11 @@
-package ru.netology.statistic;
+package ru.netology.statistic.test;
 
 import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.netology.statistic.DataGenerator;
+import ru.netology.statistic.data.DataGenerator;
+
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -20,11 +21,10 @@ class DeliveryTest {
     @DisplayName("Should successful plan and replan meeting")
     void shouldSuccessfulPlanAndReplanMeeting() {
         var validUser = DataGenerator.Registration.generateUser("ru");
-        var daysToAddForFirstMeeting = 4;
-        var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
-        var daysToAddForSecondMeeting = 7;
-        var secondMeetingDate = DataGenerator.generateDate(daysToAddForSecondMeeting);
+        var firstMeetingDate = DataGenerator.generateDate(4);
+        var secondMeetingDate = DataGenerator.generateDate(7);
 
+        // Планирование
         $("[data-test-id='city'] input").setValue(validUser.getCity());
         $("[data-test-id='date'] input").doubleClick().sendKeys(firstMeetingDate);
         $("[data-test-id='name'] input").setValue(validUser.getName());
@@ -36,6 +36,7 @@ class DeliveryTest {
                 .shouldBe(Condition.visible)
                 .shouldHave(Condition.text("Встреча успешно запланирована"));
 
+        // Перепланирование
         $("[data-test-id='date'] input").doubleClick().sendKeys(secondMeetingDate);
         $("[data-test-id='button']").click();
 
